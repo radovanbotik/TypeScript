@@ -1,0 +1,279 @@
+						Typescript
+
+1.	It is Javascript superset.
+2.	Browsers cant execute TypeScript, it is also compiler that compiles
+	TS into JS
+3.	Catching error during development
+
+#Intro:
+! - exclamation mark will reassure (tell TS) that we will get the element
+Typecasting - as HTMLInputElement
+types	-	num1:any - means num1 can be any type of data
+		num1:number - means num1 can only be number
+
+#Using TS:
+
+Running this command will also compile the code into JS and will highlight
+mistakes/issues with your code.
+tsc name-of-the-ts-file.ts
+tsc first-project.ts
+
+The Compiled file is just pure JS, ALWAYS use this file as script source
+because BROWSER CANT WORK WITH TYPESCRIPT
+
+#TypeScript Adds:
+
+1.	Types
+2.	New JS features compiled down for older browsers(like Babel)
+3.	Interfaces,Generics they are TS features, that wont be compiled
+4.	Meta-Programming features like Decorators
+5.	It is highly configurable
+
+#Setup:
+1.	create .ts file
+2.	npm init to get package.json
+		npm i --save-dev lite-server to get hot-reloads
+3.	add script into package.json
+		'start':'lite-server' and then run npm start to run server
+	
+
+
+				#Working With Types:
+
+Core Types:
+1.	number[JS,TS] 
+2.	string[JS,TS]
+3.	boolean[JS,TS]	
+
+
+1.	numbers
+In both JS and TS numbers are floats by default but both floats and
+integers are the same type - number
+
+const add = (n1: number, n2: number) => {
+  return n1 + n2;
+};
+
+const number1 = "5";
+const number2 = 3.4;
+
+const result = add(number1, number2);
+
+Number1 is underlined, and terminal shows the Error.
+number1 is a string and should be a number.
+TypeScript wont change the files during compilation though,
+it will only gives us hints what is wrong with our code.
+
+TypeScript can help us improve our JS with additional checks however
+if we are using TypeScript we might not even need to do these checks.
+
+const add = (n1: number, n2: number) => {
+  if (typeof n1 !== "number" || typeof n2 !== "number") {
+    throw new Error("inputs are not numbers");
+  }
+  return n1 + n2;
+};
+
+const number1 = 5;
+const number2 = 3.4;
+
+TypeScript allows us to fail during development rather than in runtime,
+TypeScript also knows more types than vanilla JavaScript.
+Type Casing is Important:
+Number !== number
+String !== string
+Boolean !== boolean
+
+The Core primitive types in TypeScript are all LOWERCASE.
+
+2.	booleans + strings
+
+const add = (n1: number, n2: number, showresult: boolean, phrase: string) => {
+  const result = n1 + n2;
+  if (showresult === true) {
+    console.log(phrase + result);
+  } else {
+    return n1 + n2;
+  }
+};
+
+const number1 = 5;
+const number2 = 3.4;
+const printResult = true;
+const resultPhrase = "the result is ";
+
+const result = add(number1, number2, printResult, resultPhrase);
+
+##Special Types:
+-	They are used only by TS, they wont be compiled since JS doesnt
+	understand these types
+-	Type Interference:
+	if varbiable/constant is initiated as a certain type it has to
+	remain of that type.
+	We can also work with variables like this:
+	let number1 : number;
+	number1 = 5;
+
+This will throw an error, we are trying to assing boolean to variable
+which we declared as a carrier of string earlier.
+
+let userName: string;
+userName = 'Maximilian';
+userName = false;
+
+3.	Object Types:
+
+They are typed like Objects but we dont have key:value pairs but
+key:type pairs instead.
+
+const Person = {
+name:'rado',
+age:'30'
+}
+
+TS will show us {name:string;age:number}
+
+Person is an object and it it should contain a key that is type of
+string and key age that is type of number, however this is not optimal TS
+can figure this out implicitly so we dont have to be explicit.
+
+const person: {
+  name: string;
+  age: number;
+} = {
+  name: "radovan",
+  age: 32,
+};
+console.log(person);
+
+Of course object types can also be created for nested objects.
+
+Let's say you have this JavaScript object:
+
+const product = {
+  id: 'abc1',
+  price: 12.99,
+  tags: ['great-offer', 'hot-and-new'],
+  details: {
+    title: 'Red Carpet',
+    description: 'A great carpet - almost brand-new!'
+  }
+}
+This would be the type of such an object:
+
+{
+  id: string;
+  price: number;
+  tags: string[];
+  details: {
+    title: string;
+    description: string;
+  }
+}
+So you have an object type in an object type so to say.
+
+4.	Array Types:
+
+What will be stored in favActivities is an ARRAY OF STRINGS;
+let favActivities: string[];
+
+This will throw an error because favActivities is supposed to be
+an ARRAY of strings not just SINGLE string.
+let favActivities: string[];
+favActivities = "sports";
+
+This will throw an error because 1 is a number
+favActivities = ["sports", 1];
+
+if we redifine the type we can use mixed array
+favActivities : any[]
+favActivities = ["sports", 1];
+
+
+because of types we set up in object(implicitly) TS offers us
+methods that can be used on hobby in console.log because it knows
+that hobby will be string since person.hobbies is an ARRAY of STRINGS
+
+const person = {
+  name: "radovan",
+  age: 30,
+  hobbies: ["sports", "cooking"],
+};
+
+for (const hobby of person.hobbies) {
+  console.log(hobby.toUpperCase());
+}
+
+5.	Tuple Types:
+
+Tuples are only recognized by TS not JS
+Tuples are fixed LENGTH and fixed TYPE arrays
+role: [2, "author"], role:(string | number)[]
+We need to set tuples explicitly
+
+const person: {
+name:string;
+age:number;
+hobbies: string[];
+role: [number,string]  <=== This is tuple, an array of 
+					exacty 1number and 1string
+
+} = {
+name: "radovan",
+  age: 30,
+  hobbies: ["sports", "cooking"],
+  role: [2, "author"],
+
+}
+
+person.role[1] = 10; <==throws an error
+person.role.push("developer") <=== wont be catched, an exception
+
+6.	Enum Types:
+
+Enums are only recognized by TS not JS
+enum {NEW,OLD} 
+enumerated global constant identifiers
+
+const ADMIN = 0;
+const READ_ONLY = 1;
+const AUTHOR = 2;
+
+const person = {
+  name: "radovan",
+  age: 30,
+  hobbies: ["sports", "cooking"],
+  role: 2,
+};
+
+if (person.role === AUTHOR) {
+  console.log("is author");
+}
+
+Enums can save us work :
+
+enum Role {ADMIN,READ_ONLY,AUTHOR};
+behind the scenes 
+ADMIN receives number 0
+READ_ONLY receives number 1
+AUTHOR receives number 2
+
+const person = {
+  name: "radovan",
+  age: 30,
+  hobbies: ["sports", "cooking"],
+  role: Role.ADMIN,
+};
+
+if (person.role === Role.AUTHOR) {
+  console.log("is author");
+} else {
+  console.log("is not a author");
+}
+
+///is not a author
+
+You can also do, then READ_ONLY will be 6 and AUTHOR 7
+enum Role {ADMIN = 5,READ_ONLY,AUTHOR};
+or
+enum Role {ADMIN = 'ADMIN',READ_ONLY,AUTHOR};
